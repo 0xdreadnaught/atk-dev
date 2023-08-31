@@ -1,0 +1,8 @@
+users:
+  admin:
+    displayname: "The Admin"
+    password: "$argon2id$v=19$m=16,t=20,p=1$Y2hhbmdlbWU$nSl9PWBrqLPZVEX4ZswZVg"
+    email: admin@atk.net
+    groups:
+      - admin
+

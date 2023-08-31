@@ -1,0 +1,100 @@
+        # tqXt36OVlP+y84wWqZSjMelBIVa9phDVGJmmhz3i1cMni8eLpJzWecA3pfnG6Tm9
+        # ze5M4whASleEt+M00gEvNaU9ND+z0wBfi+/DwJYIbv8PQdGrBiZFrPhTPjGQUldR
+        # lXccV2meeLZv7TagVxSi3DO6dSJfSEHyemd5j9mBAoGAX8Hv+0gOQZQCSOTAq8Nx
+        # 6dZcp9gHlNaXnMsP9eTDckOSzh636JPGvj6m+GPJSSbkURUIQ3oyokMNwFqvlNos
+        # fTaLhAOfjBZI9WnDTTQxpugWjphJ4HqbC67JC/qIiw5S6FdaEvGLEEoD4zoChywZ
+        # 9oGAn+fz2d/0/JAH/FpFPgsCgYEAp/ipZgPzziiZ9ov1wbdAQcWRj7RaWnssPFpX
+        # jXwEiXT3CgEMO4MJ4+KWIWOChrti3qFBg6i6lDyyS6Qyls7sLFbUdC7HlTcrOEMe
+        # rBoTcCI1GqZNlqWOVQ65ZIEiaI7o1vPBZo2GMQEZuq8mDKFsOMThvvTrM5cAep84
+        # n6HJR4ECgYABWcbsSnr0MKvVth/inxjbKapbZnp2HUCuw87Ie5zK2Of/tbC20wwk
+        # yKw3vrGoE3O1t1g2m2tn8UGGASeZ842jZWjIODdSi5+icysQGuULKt86h/woz2SQ
+        # 27GoE2i5mh6Yez6VAYbUuns3FcwIsMyWLq043Tu2DNkx9ijOOAuQzw^invalid..
+        # DO NOT USE==
+        # -----END RSA PRIVATE KEY-----
+
+    ## The Redis HA configuration options.
+    ## This provides specific options to Redis Sentinel, sentinel_name must be defined (Master Name).
+    # high_availability:
+      ## Sentinel Name / Master Name.
+      # sentinel_name: mysentinel
+
+      ## Specific username for Redis Sentinel. The node username and password is configured above.
+      # sentinel_username: sentinel_specific_user
+
+      ## Specific password for Redis Sentinel. The node username and password is configured above.
+      # sentinel_password: sentinel_specific_pass
+
+      ## The additional nodes to pre-seed the redis provider with (for sentinel).
+      ## If the host in the above section is defined, it will be combined with this list to connect to sentinel.
+      ## For high availability to be used you must have either defined; the host above or at least one node below.
+      # nodes:
+        # - host: sentinel-node1
+        #   port: 6379
+        # - host: sentinel-node2
+        #   port: 6379
+
+      ## Choose the host with the lowest latency.
+      # route_by_latency: false
+
+      ## Choose the host randomly.
+      # route_randomly: false
+
+##
+## Regulation Configuration
+##
+## This mechanism prevents attackers from brute forcing the first factor. It bans the user if too many attempts are made
+## in a short period of time.
+regulation:
+  ## The number of failed login attempts before user is banned. Set it to 0 to disable regulation.
+  max_retries: 3
+
+  ## The time range during which the user can attempt login before being banned. The user is banned if the
+  ## authentication failed 'max_retries' times in a 'find_time' seconds window. Find Time accepts duration notation.
+  ## See: https://www.authelia.com/c/common#duration-notation-format
+  find_time: 2m
+
+  ## The length of time before a banned user can login again. Ban Time accepts duration notation.
+  ## See: https://www.authelia.com/c/common#duration-notation-format
+  ban_time: 5m
+
+##
+## Storage Provider Configuration
+##
+## The available providers are: `local`, `mysql`, `postgres`. You must use one and only one of these providers.
+# storage:
+  ## The encryption key that is used to encrypt sensitive information in the database. Must be a string with a minimum
+  ## length of 20. Please see the docs if you configure this with an undesirable key and need to change it, you MUST use
+  ## the CLI to change this in the database if you want to change it from a previously configured value.
+  # encryption_key: you_must_generate_a_random_string_of_more_than_twenty_chars_and_configure_this
+
+  ##
+  ## Local (Storage Provider)
+  ##
+  ## This stores the data in a SQLite3 Database.
+  ## This is only recommended for lightweight non-stateful installations.
+  ##
+  ## Important: Kubernetes (or HA) users must read https://www.authelia.com/t/statelessness
+  ##
+  # local:
+    ## Path to the SQLite3 Database.
+    # path: /config/db.sqlite3
+
+  ##
+  ## MySQL / MariaDB (Storage Provider)
+  ##
+  # mysql:
+    # host: 127.0.0.1
+    # port: 3306
+    # database: authelia
+    # username: authelia
+    ## Password can also be set using a secret: https://www.authelia.com/c/secrets
+    # password: mypassword
+    # timeout: 5s
+
+    ## MySQL TLS settings. Configuring this requires TLS.
+    # tls:
+      ## The server subject name to check the servers certificate against during the validation process.
+      ## This option is not required if the certificate has a SAN which matches the host option.
+      # server_name: mysql.example.com
+
+      ## Skip verifying the server certificate entirely. In preference to setting this we strongly recommend you add the

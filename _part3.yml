@@ -1,0 +1,100 @@
+
+  ## Adjust the interaction timeout for Webauthn dialogues.
+  timeout: 60s
+
+  ## The display name the browser should show the user for when using Webauthn to login/register.
+  display_name: Authelia
+
+  ## Conveyance preference controls if we collect the attestation statement including the AAGUID from the device.
+  ## Options are none, indirect, direct.
+  attestation_conveyance_preference: indirect
+
+  ## User verification controls if the user must make a gesture or action to confirm they are present.
+  ## Options are required, preferred, discouraged.
+  user_verification: preferred
+
+##
+## Duo Push API Configuration
+##
+## Parameters used to contact the Duo API. Those are generated when you protect an application of type
+## "Partner Auth API" in the management panel.
+# duo_api:
+  # disable: false
+  # hostname: api-123456789.example.com
+  # integration_key: ABCDEF
+  ## Secret can also be set using a secret: https://www.authelia.com/c/secrets
+  # secret_key: 1234567890abcdefghifjkl
+  # enable_self_enrollment: false
+
+##
+## NTP Configuration
+##
+## This is used to validate the servers time is accurate enough to validate TOTP.
+ntp:
+  ## NTP server address.
+  address: "time.cloudflare.com:123"
+
+  ## NTP version.
+  version: 4
+
+  ## Maximum allowed time offset between the host and the NTP server.
+  max_desync: 3s
+
+  ## Disables the NTP check on startup entirely. This means Authelia will not contact a remote service at all if you
+  ## set this to true, and can operate in a truly offline mode.
+  disable_startup_check: false
+
+  ## The default of false will prevent startup only if we can contact the NTP server and the time is out of sync with
+  ## the NTP server more than the configured max_desync. If you set this to true, an error will be logged but startup
+  ## will continue regardless of results.
+  disable_failure: false
+
+##
+## Authentication Backend Provider Configuration
+##
+## Used for verifying user passwords and retrieve information such as email address and groups users belong to.
+##
+## The available providers are: `file`, `ldap`. You must use only one of these providers.
+authentication_backend:
+
+  ## Password Reset Options.
+  password_reset:
+    ## Disable both the HTML element and the API for reset password functionality.
+    disable: false
+
+    ## External reset password url that redirects the user to an external reset portal. This disables the internal reset
+    ## functionality.
+    custom_url: ""
+
+  ## The amount of time to wait before we refresh data from the authentication backend. Uses duration notation.
+  ## To disable this feature set it to 'disable', this will slightly reduce security because for Authelia, users will
+  ## always belong to groups they belonged to at the time of login even if they have been removed from them in LDAP.
+  ## To force update on every request you can set this to '0' or 'always', this will increase processor demand.
+  ## See the below documentation for more information.
+  ## Duration Notation docs:  https://www.authelia.com/c/common#duration-notation-format
+  ## Refresh Interval docs: https://www.authelia.com/c/1fa#refresh-interval
+  refresh_interval: 5m
+
+  ##
+  ## LDAP (Authentication Provider)
+  ##
+  ## This is the recommended Authentication Provider in production
+  ## because it allows Authelia to offload the stateful operations
+  ## onto the LDAP service.
+  # ldap:
+    ## The LDAP implementation, this affects elements like the attribute utilised for resetting a password.
+    ## Acceptable options are as follows:
+    ## - 'activedirectory' - For Microsoft Active Directory.
+    ## - 'custom' - For custom specifications of attributes and filters.
+    ## This currently defaults to 'custom' to maintain existing behaviour.
+    ##
+    ## Depending on the option here certain other values in this section have a default value, notably all of the
+    ## attribute mappings have a default value that this config overrides, you can read more about these default values
+    ## at https://www.authelia.com/c/ldap#defaults
+    # implementation: custom
+
+    ## The url to the ldap server. Format: <scheme>://<address>[:<port>].
+    ## Scheme can be ldap or ldaps in the format (port optional).
+    # url: ldap://127.0.0.1
+
+    ## The dial timeout for LDAP.
